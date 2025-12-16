@@ -6,36 +6,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
-      /* KAPMES kleuren (flat, geen gradients) */
+      /* KAPMES tones (flat: zwart / blauw / grijs — geen gradients) */
       --abyss: #050506;
-      --kapmes-dark: #121212;
-      --kapmes-mid: #5b5b5b;
-      --kapmes-light: #b6b8ba;
-      --kapmes-offwhite: #f7f7f7;
-      --kapmes-blue: #0d44e3;
-
-      --bg: var(--abyss);
-      --bg-panel: var(--kapmes-dark);
+      --panel: #121212;
+      --panel-2: #0f0f0f;
       --border: #2b2b2b;
-      --accent: var(--kapmes-blue);
-      --accent-soft: rgba(13, 68, 227, 0.18);
-      --text-main: var(--kapmes-offwhite);
-      --text-muted: var(--kapmes-light);
+
+      --text: #f7f7f7;
+      --muted: #b6b8ba;
+      --muted-2: #7a7a7a;
+
+      --blue: #0d44e3;
+      --blue-soft: rgba(13, 68, 227, 0.18);
+
       --radius: 12px;
       --shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
       --transition: 0.18s ease-out;
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: var(--font);
-      background: var(--bg); /* vlak zwart */
-      color: var(--text-main);
+      background: var(--abyss);
+      color: var(--text);
       -webkit-font-smoothing: antialiased;
     }
 
@@ -45,9 +40,7 @@
       padding: 0 16px;
     }
 
-    .app-header {
-      margin-bottom: 24px;
-    }
+    .app-header { margin-bottom: 22px; }
 
     .badge {
       display: inline-flex;
@@ -60,14 +53,14 @@
       border-radius: 999px;
       background: #090909;
       border: 1px solid #272727;
-      color: var(--text-muted);
+      color: var(--muted);
     }
 
     .badge-dot {
       width: 7px;
       height: 7px;
       border-radius: 999px;
-      background: var(--accent);
+      background: var(--blue);
       box-shadow: 0 0 12px rgba(13, 68, 227, 0.9);
     }
 
@@ -75,22 +68,23 @@
       font-size: 28px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      margin: 14px 0 4px;
+      margin: 14px 0 6px;
       font-weight: 500;
     }
 
     .subtitle {
       font-size: 13px;
-      color: var(--text-muted);
-      max-width: 560px;
+      color: var(--muted);
+      max-width: 620px;
       line-height: 1.6;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
     }
 
     .hint {
       font-size: 11px;
-      color: var(--kapmes-light);
+      color: var(--muted);
       opacity: 0.8;
+      margin: 0;
     }
 
     .layout {
@@ -101,14 +95,11 @@
     }
 
     @media (max-width: 880px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
+      .layout { grid-template-columns: 1fr; }
     }
 
     .panel {
-      position: relative;
-      background: var(--bg-panel); /* vlak donker paneel */
+      background: var(--panel);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       border: 1px solid var(--border);
@@ -121,21 +112,20 @@
       justify-content: space-between;
       align-items: baseline;
       margin-bottom: 10px;
-      z-index: 1;
-      position: relative;
     }
 
     .panel-title h2 {
       font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      color: var(--kapmes-light);
+      color: var(--muted);
       margin: 0;
+      font-weight: 600;
     }
 
     .panel-title span {
       font-size: 11px;
-      color: var(--kapmes-mid);
+      color: var(--muted-2);
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
@@ -146,31 +136,15 @@
       padding-top: 10px;
       max-height: 560px;
       overflow: auto;
-      z-index: 1;
-      position: relative;
     }
 
-    /* Custom scrollbar (dark) */
-    .panel-body::-webkit-scrollbar {
-      width: 6px;
-    }
-    .panel-body::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .panel-body::-webkit-scrollbar-thumb {
-      background: #3a3a3a;
-      border-radius: 999px;
-    }
+    .panel-body::-webkit-scrollbar { width: 6px; }
+    .panel-body::-webkit-scrollbar-track { background: transparent; }
+    .panel-body::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 999px; }
 
     /* TREE */
-
-    .tree-root {
-      font-size: 13px;
-    }
-
-    .tree-node {
-      margin-left: 4px;
-    }
+    .tree-root { font-size: 13px; }
+    .tree-node { margin-left: 4px; }
 
     .tree-item {
       display: flex;
@@ -180,10 +154,7 @@
       border-radius: 8px;
       cursor: pointer;
       user-select: none;
-      transition:
-        background var(--transition),
-        transform var(--transition),
-        box-shadow var(--transition);
+      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
     }
 
     .tree-item:hover {
@@ -192,7 +163,7 @@
     }
 
     .tree-item.active {
-      background: var(--accent-soft);
+      background: var(--blue-soft);
       box-shadow: 0 0 0 1px rgba(13, 68, 227, 0.7);
       transform: translateX(1px);
     }
@@ -205,21 +176,12 @@
       flex: 1;
     }
 
-    .tree-icon {
-      font-size: 16px;
-      width: 18px;
-      text-align: center;
-    }
-
-    .tree-name {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
+    .tree-icon { font-size: 16px; width: 18px; text-align: center; }
+    .tree-name { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 
     .tree-meta {
       font-size: 10px;
-      color: var(--kapmes-mid);
+      color: var(--muted-2);
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
@@ -228,15 +190,12 @@
       font-size: 11px;
       width: 14px;
       text-align: center;
-      color: var(--kapmes-light);
+      color: var(--muted);
       transition: transform var(--transition), opacity var(--transition);
       opacity: 0.7;
     }
 
-    .tree-arrow.open {
-      transform: rotate(90deg);
-      opacity: 1;
-    }
+    .tree-arrow.open { transform: rotate(90deg); opacity: 1; }
 
     .children {
       margin-left: 18px;
@@ -245,31 +204,22 @@
       margin-top: 2px;
     }
 
-    .children.collapsed {
-      display: none;
-    }
+    .children.collapsed { display: none; }
 
     /* DETAILS */
-
     .details-empty {
       font-size: 13px;
-      color: var(--text-muted);
+      color: var(--muted);
       line-height: 1.7;
     }
 
-    .details-empty ul {
-      padding-left: 18px;
-      margin: 6px 0 0;
-    }
-
-    .details-empty li {
-      margin-bottom: 2px;
-    }
+    .details-empty ul { padding-left: 18px; margin: 6px 0 0; }
+    .details-empty li { margin-bottom: 2px; }
 
     .details-title {
       font-size: 18px;
       font-weight: 500;
-      margin: 0 0 4px;
+      margin: 0 0 6px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       display: flex;
@@ -281,13 +231,13 @@
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.18em;
-      color: var(--kapmes-mid);
-      margin-bottom: 6px;
+      color: var(--muted-2);
+      margin-bottom: 8px;
     }
 
     .details-path {
       font-size: 11px;
-      color: var(--kapmes-light);
+      color: var(--muted);
       margin-bottom: 12px;
       opacity: 0.8;
     }
@@ -296,7 +246,7 @@
       font-size: 13px;
       line-height: 1.7;
       margin-bottom: 12px;
-      color: var(--kapmes-offwhite);
+      color: var(--text);
     }
 
     .details-tags {
@@ -311,24 +261,10 @@
       padding: 2px 10px;
       border-radius: 999px;
       border: 1px solid #3a3a3a;
-      background: #101010;
-      color: var(--kapmes-light);
+      background: var(--panel-2);
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.12em;
-    }
-
-    .short-tip {
-      font-size: 11px;
-      color: var(--kapmes-light);
-      border-top: 1px dashed var(--border);
-      padding-top: 8px;
-      margin-top: 8px;
-      opacity: 0.85;
-    }
-
-    .short-tip strong {
-      color: var(--accent);
-      font-weight: 500;
     }
   </style>
 </head>
@@ -337,19 +273,15 @@
     <header class="app-header">
       <div class="badge">
         <span class="badge-dot"></span>
-        KAPMES · INTERNE BRAND FOLDER DEMO
+        KAPMES · BRAND FOLDER DEMO
       </div>
       <h1>REDEFINING THE SPACE OF FOLDERS</h1>
-      <p class="subtitle">
-        Een interactieve demo van hoe jullie Google Drive brand folder kan worden opgebouwd:
-        helder, overzichtelijk en klaar voor groei.
-      </p>
-      <p class="hint">
-      </p>
+      <p class="subtitle">Een interactieve demo van hoe jullie Google Drive brand folder is opgebouwd.</p>
+      <p class="hint">Klik links door de structuur. Rechts krijg je per map/bestand de bedoeling en inhoud.</p>
     </header>
 
     <main class="layout">
-      <!-- LEFT PANEL – TREE -->
+      <!-- LEFT PANEL -->
       <section class="panel">
         <div class="panel-title">
           <h2>STRUCTUUR</h2>
@@ -360,7 +292,7 @@
         </div>
       </section>
 
-      <!-- RIGHT PANEL – DETAILS -->
+      <!-- RIGHT PANEL -->
       <section class="panel">
         <div class="panel-title">
           <h2>DETAILS</h2>
@@ -368,12 +300,12 @@
         </div>
         <div class="panel-body" id="details-panel">
           <div class="details-empty">
-            Selecteer een map of bestand links om hier meer uitleg te zien.<br /><br />
-            Dit paneel kan je gebruiken om klanten kort uit te leggen:
+            Selecteer een map of bestand links om hier uitleg te zien.<br /><br />
+            Dit paneel helpt klanten (en teams) begrijpen:
             <ul>
-              <li>Wat ze in een map of document vinden</li>
-              <li>Hoe ze het mogen gebruiken</li>
-              <li>Welke versie “de juiste” is</li>
+              <li>waar ze wat vinden</li>
+              <li>wat “bron-documenten” zijn vs. templates</li>
+              <li>wat de logische volgorde is (strategie → identiteit → toepassing)</li>
             </ul>
           </div>
         </div>
@@ -382,416 +314,403 @@
   </div>
 
   <script>
-    // ---------- DATASTRUCTUUR VOOR DE BRAND FOLDER ----------
+    // ---------- BRAND FOLDER STRUCTUUR (met beschrijvingen) ----------
     const brandStructure = {
       name: "Brand Folder",
       type: "folder",
-      description:
-        "Hoofdmappen met alle merkgerelateerde documenten: strategie, identiteit, assets, templates, campagnes en website.",
-      tags: ["Overzicht", "Brand Hub", "Google Drive"],
+      description: "Centrale hub met alle merkstrategische documenten, identity assets en toepassingen.",
+      tags: ["Overzicht", "Brand Hub"],
       children: [
         {
-          name: "01 Brand Strategy (WHY & HOW)",
+          name: "01 Merkstrategie",
           type: "folder",
-          description:
-            "STRATEGIE (CORE): alle kernstukken rond identiteit, positionering, doelgroepen, cultuur en merkarchitectuur.",
-          tags: ["Strategie", "Core"],
+          description: "CORE strategie: wie we zijn, waar we voor staan en hoe we ons positioneren in de markt.",
+          tags: ["Core", "Why/How"],
           children: [
             {
               name: "Kernidentiteit",
               type: "file",
-              description:
-                "Overzicht van wie jullie zijn in één blik: purpose, missie, visie en merkbelofte. Dit is de basis van alle andere documenten.",
-              tags: ["Kernidentiteit", "Core"]
+              description: "Purpose, missie, visie en merkbelofte in één helder document. Basis voor alle beslissingen.",
+              tags: ["Core", "Identity"]
             },
             {
               name: "Positionering statement",
               type: "file",
-              description:
-                "Kort statement dat weergeeft welke plek jullie merk inneemt in de markt, tegenover wie en waarom dat relevant is.",
-              tags: ["Positionering", "Statement"]
+              description: "Kort en krachtig: voor wie we er zijn, wat we beloven, en waarom we verschillen.",
+              tags: ["Positionering"]
             },
             {
               name: "Doelgroepen",
               type: "file",
-              description:
-                "Beschrijving van jullie belangrijkste doelgroepen met kernkenmerken en noden. Koppelt naar persona’s indien aanwezig.",
-              tags: ["Doelgroepen", "Segmenten"]
+              description: "Overzicht van doelgroepen/segmenten met noden, triggers en belangrijkste context.",
+              tags: ["Audience", "Segmenten"]
             },
             {
               name: "Waarden & Cultuur (EVP)",
               type: "file",
-              description:
-                "Merkwaarden en Employer Value Proposition: wat jullie beloven aan medewerkers en welke cultuur jullie willen bouwen.",
-              tags: ["Waarden", "Cultuur", "EVP"]
+              description: "Merkwaarden + cultuurprincipes. Inclusief EVP: wat medewerkers mogen verwachten en bijdragen.",
+              tags: ["Culture", "EVP"]
             },
             {
-              name: "USP’s & Differentiators",
+              name: "USP’s / Differentiators",
               type: "file",
-              description:
-                "Lijst en uitleg van de belangrijkste Unique Selling Points en onderscheidende elementen t.o.v. concurrenten.",
-              tags: ["USP", "Differentiatie"]
+              description: "Concrete onderscheiders en bewijzen (proof points) die de positionering geloofwaardig maken.",
+              tags: ["USP", "Proof"]
             },
             {
               name: "Merkarchitectuur",
               type: "file",
-              description:
-                "Structuur van hoofdmerk, submerken, productlijnen en eventuele endorsing. Helpt verwarring in communicatie te vermijden.",
-              tags: ["Merkarchitectuur", "Structuur"]
+              description: "Structuur van hoofdmerk, submerken, productlijnen en naming-logica.",
+              tags: ["Architectuur"]
             },
             {
               name: "Merkpersoonlijkheid & archetypen",
               type: "file",
-              description:
-                "Uitwerking van merkpersoonlijkheid en gekozen archetypen, inclusief gedrags- en communicatie-implicaties.",
-              tags: ["Archetypen", "Persoonlijkheid"]
+              description: "Karakter van het merk: archetypen, gedrag en communicatie-implicaties voor content en design.",
+              tags: ["Archetypen", "Personality"]
             }
           ]
         },
         {
-          name: "02 Visual Identity (LOOK & FEEL)",
+          name: "02 Verbale Identiteit",
           type: "folder",
-          description:
-            "CREATIE (CORE) – Visuele identiteit: alles wat het merk visueel herkenbaar maakt.",
-          tags: ["Visuele identiteit", "Creatie"],
+          description: "CREATIE (CORE): hoe het merk spreekt, schrijft en overtuigt — consistent over alle kanalen.",
+          tags: ["Copy", "Tone"],
+          children: [
+            {
+              name: "Naam & schrijfwijze",
+              type: "file",
+              description: "Officiële naam, schrijfwijze, hoofdletters, afkortingen en fout-voorbeelden.",
+              tags: ["Naming"]
+            },
+            {
+              name: "Tone of Voice",
+              type: "file",
+              description: "Toon, stijl, woordkeuzes, do’s & don’ts en voorbeeldzinnen per situatie.",
+              tags: ["TOV", "Guidelines"]
+            },
+            {
+              name: "Baseline / Tagline",
+              type: "file",
+              description: "Baseline(s) met gebruikscontext: wanneer wel/niet inzetten, varianten en vertalingen.",
+              tags: ["Tagline"]
+            },
+            {
+              name: "Messaging-piramide",
+              type: "file",
+              description: "Hiërarchie van boodschappen: kern → ondersteunend → bewijs. Handig voor sales, web en campagnes.",
+              tags: ["Messaging"]
+            },
+            {
+              name: "Boilerplates",
+              type: "file",
+              description: "Standaard korte & lange ‘over ons’-teksten voor pers, website, decks en partners.",
+              tags: ["Boilerplate"]
+            }
+          ]
+        },
+        {
+          name: "03 Visuele Identiteit",
+          type: "folder",
+          description: "CREATIE (CORE): visuele bouwstenen die het merk herkenbaar maken en toepasbaar houden.",
+          tags: ["Design", "System"],
           children: [
             {
               name: "Logo & versies",
               type: "folder",
-              description:
-                "Alle logoversies: primair, secundair, monochroom, inverted. Inclusief regels rond minimale grootte en clear space.",
-              tags: ["Logo", "Versies"],
+              description: "Alle goedgekeurde logo-varianten + regels rond clear space, minimumgrootte en achtergrondgebruik.",
+              tags: ["Logo"],
               children: [
                 {
-                  name: "Master logo & clear space",
+                  name: "Primary logo (master)",
                   type: "file",
-                  description:
-                    "Hoofdlogo met richtlijnen voor minimum-afmetingen, plaatsing en vrije ruimte rond het logo.",
-                  tags: ["Hoofdlogo", "Richtlijnen"]
+                  description: "Master-bestand + kernregels (clear space, min. size, correcte plaatsing).",
+                  tags: ["Master"]
                 },
                 {
-                  name: "Alternatieve logo’s (horizontaal / stacked)",
+                  name: "Varianten (stacked / horizontal)",
                   type: "file",
-                  description:
-                    "Logovarianten voor specifieke situaties, zoals smalle of verticale toepassingen.",
-                  tags: ["Varianten", "Layout"]
+                  description: "Varianten voor verschillende formaten en toepassingen (smal, breed, vertical).",
+                  tags: ["Variants"]
                 },
                 {
-                  name: "Monochrome & inverted versies",
+                  name: "Monochroom & inverted",
                   type: "file",
-                  description:
-                    "Logo’s voor gebruik op donkere of drukke achtergronden, en voor éénkleurendruk.",
-                  tags: ["Monochrome", "Inverse"]
+                  description: "Versies voor éénkleurendruk en donkere/drukke achtergronden.",
+                  tags: ["Mono", "Inverted"]
                 }
               ]
             },
             {
               name: "Kleurpalet",
               type: "file",
-              description:
-                "Primair en secundair kleurpalet met RGB, CMYK en HEX-waarden, plus tips voor contrast en toegankelijkheid.",
-              tags: ["Kleuren", "Palet"]
+              description: "Primair/secondair palet met HEX/RGB/CMYK + contrastregels en toegankelijkheidsnotities.",
+              tags: ["Color"]
             },
             {
               name: "Typografie",
               type: "file",
-              description:
-                "Lettertypefamilies, hiërarchie (titels, subtitels, body) en voorbeeldtoepassingen per kanaal.",
-              tags: ["Typografie", "Fonts"]
+              description: "Lettertypes, hiërarchie, schaal, line-height en voorbeelden voor print en digitaal.",
+              tags: ["Type"]
             },
             {
               name: "Grids & lay-outs",
               type: "file",
-              description:
-                "Rasters en layoutregels voor print en digitaal: marges, kolommen, baseline-grid, etc.",
-              tags: ["Grid", "Layout"]
+              description: "Layoutregels: marges, kolommen, baseline grid en component-opbouw.",
+              tags: ["Grid"]
             },
             {
               name: "Visuele elementen",
               type: "file",
-              description:
-                "Overzicht van iconen, illustratiestijl, vormen en eventuele grafische patronen die bij het merk horen.",
-              tags: ["Iconen", "Illustraties"]
+              description: "Iconenset, illustratiestijl, vormen, patterns en grafische ‘brand devices’.",
+              tags: ["Assets"]
             },
             {
               name: "Fotogids",
               type: "file",
-              description:
-                "Richtlijnen voor fotografie: type beelden, kadrering, licht, compositie en wat wel/niet ‘on brand’ is.",
-              tags: ["Fotografie", "Guidelines"]
+              description: "Fotostijl: onderwerpkeuze, sfeer, kleur, kadrering en wat ‘off-brand’ is.",
+              tags: ["Photo"]
             },
             {
               name: "Video guidelines",
               type: "file",
-              description:
-                "Basisregels voor video: beeldstijl, tempo, ondertitels, logo-animatie en eindschermen.",
-              tags: ["Video", "Guidelines"]
+              description: "Regels voor video: tempo, overlays, ondertitels, intro/outro en eventuele motion-principes.",
+              tags: ["Video"]
             }
           ]
         },
         {
-          name: "03 Verbal Identity (TONE & TAAL)",
+          name: "04 Brand Atlas",
           type: "folder",
-          description:
-            "CREATIE (CORE) – Verbale identiteit: hoe het merk klinkt, schrijft en vertelt.",
-          tags: ["Verbaal", "Creatie"],
+          description: "Het kompas: één centrale plek waar teams snel de ‘waarom’, regels en praktijkvoorbeelden vinden.",
+          tags: ["Reference", "Playbook"],
           children: [
             {
-              name: "Naam & schrijfwijze",
+              name: "Merkessentie (WHY–HOW–WHAT)",
               type: "file",
-              description:
-                "Officiële merknaam, schrijfwijze, hoofdlettergebruik en afkortingen. Inclusief voorbeelden van correcte en foutieve toepassing.",
-              tags: ["Naam", "Schrijfwijze"]
+              description: "Samenvatting van de merkessentie: wie we zijn, wat we doen en hoe we dat doen.",
+              tags: ["Essentie"]
             },
             {
-              name: "Tone of Voice",
+              name: "Brand principes & beslisregels",
               type: "file",
-              description:
-                "Richtlijnen voor toon, stijl en woordgebruik, met do’s & don’ts en voorbeeldzinnen.",
-              tags: ["Tone of Voice", "Taal"]
+              description: "Praktische ‘if-this-then-that’ regels die helpen consistent keuzes maken in content & design.",
+              tags: ["Principes"]
             },
             {
-              name: "Baseline / Tagline",
+              name: "Do’s & Don’ts (verbaal + visueel)",
               type: "file",
-              description:
-                "Overzicht van de baseline(s) en hoe/wanneer je die inzet, inclusief vertalingen indien nodig.",
-              tags: ["Baseline", "Tagline"]
+              description: "Concrete voorbeelden van correcte en foutieve toepassingen in taal en beeld.",
+              tags: ["Do/Don't"]
             },
             {
-              name: "Messaging-piramide",
+              name: "Brand in practice (voorbeeldcases)",
               type: "file",
-              description:
-                "Van kernboodschap naar ondersteunende argumenten en proof points. Helpt bij het schrijven van consistente content.",
-              tags: ["Messaging", "Structuur"]
+              description: "Voorbeelden van correcte toepassingen: social, deck, ad, websectie — als referentie.",
+              tags: ["Examples"]
             },
             {
-              name: "Boilerplates",
+              name: "Governance & ownership",
               type: "file",
-              description:
-                "Standaard korte en lange beschrijvingen van het merk voor gebruik in pers, website en presentaties.",
-              tags: ["Boilerplate", "Over ons"]
+              description: "Wie beheert wat, hoe updates gebeuren en hoe aanvragen voor nieuwe assets lopen.",
+              tags: ["Process"]
             },
             {
-              name: "Voorbeeld copy – website & socials",
+              name: "Versiebeheer & changelog",
               type: "file",
-              description:
-                "Concrete tekstvoorbeelden die tonen hoe de verbale stijl klinkt in praktijk (webpagina, LinkedIn-post, nieuwsbrief...).",
-              tags: ["Voorbeelden", "Copy"]
-            }
-          ]
-        },
-        {
-          name: "04 Brand Guidelines (THE RULEBOOK)",
-          type: "folder",
-          description:
-            "Overkoepelende handleiding die strategie, visuele en verbale identiteit en activatie samenbrengt.",
-          tags: ["Brand book", "Handleiding"],
-          children: [
-            {
-              name: "Brand Guidelines – PDF",
-              type: "file",
-              description:
-                "Volledige brand manual. Start hier wanneer je met het merk werkt of iets nieuws opmaakt.",
-              tags: ["Brandbook", "PDF"]
-            },
-            {
-              name: "Do’s & Don’ts (visual + copy)",
-              type: "file",
-              description:
-                "Concrete voorbeelden van wat wel en niet kan in visuals én in taal. Ideaal voor interne brandtraining.",
-              tags: ["Do’s & Don’ts", "Praktisch"]
+              description: "Logboek van wijzigingen (wat/wanneer/waarom) zodat iedereen met de juiste versie werkt.",
+              tags: ["Changelog"]
             }
           ]
         },
         {
           name: "05 Print Assets & Templates",
           type: "folder",
-          description:
-            "ACTIVATIE (CORE) – Brand-toepassingen voor print: stationery, drukwerk en signage.",
-          tags: ["Print", "Activatie"],
+          description: "ACTIVATIE (CORE) voor print: templates en drukwerkklaar materiaal voor offline toepassingen.",
+          tags: ["Print", "Activation"],
           children: [
             {
-              name: "Stationery – visitekaartjes",
+              name: "Stationery – visitekaart",
               type: "file",
-              description:
-                "Drukwerkklaar template voor visitekaartjes met richtlijnen voor naamvelden, functies en contactinfo.",
-              tags: ["Stationery", "Visitekaart"]
+              description: "Drukwerkklaar template met vaste velden, marges en correcte logo-plaatsing.",
+              tags: ["Stationery"]
             },
             {
               name: "Stationery – briefpapier",
               type: "file",
-              description:
-                "Template voor briefpapier (PDF/indesign) met marges en logo-plaatsing volgens de gridregels.",
-              tags: ["Stationery", "Brief"]
+              description: "Template (A4) met grid, typografie en vaste zones voor adres/footers.",
+              tags: ["Stationery"]
             },
             {
-              name: "Packaging & labels",
+              name: "Packaging / labels",
               type: "file",
-              description:
-                "Basisopzetten voor verpakkingen en labels in huisstijl, met aandacht voor leesbaarheid en merkimpact.",
-              tags: ["Packaging", "Label"]
+              description: "Basisopzetten voor verpakking of labels met aandacht voor leesbaarheid en merkimpact.",
+              tags: ["Packaging"]
             },
             {
-              name: "Signage – basislayouts",
+              name: "Signage / wayfinding",
               type: "file",
-              description:
-                "Richtlijnen en sjablonen voor wayfinding, gevelsignalisatie en beurspanelen.",
-              tags: ["Signage", "Wayfinding"]
+              description: "Layouts en richtlijnen voor signalisatie, beursmateriaal en fysieke touchpoints.",
+              tags: ["Signage"]
             }
           ]
         },
         {
           name: "06 Digital Assets & Templates",
           type: "folder",
-          description:
-            "ACTIVATIE (CORE) – Digitale brand-toepassingen en herbruikbare templates.",
-          tags: ["Digitaal", "Activatie"],
+          description: "ACTIVATIE (CORE) digitaal: herbruikbare templates en assets voor dagelijkse communicatie.",
+          tags: ["Digital", "Activation"],
           children: [
             {
-              name: "E-mail signature – handleiding & voorbeeld",
+              name: "E-mail signature",
               type: "file",
-              description:
-                "Uniforme e-mailhandtekening met voorbeeld en technische instructies (Outlook, Gmail,...).",
-              tags: ["E-mail", "Signature"]
+              description: "Handtekening-template + instructies voor installatie (Gmail/Outlook) en varianten per team.",
+              tags: ["Email"]
             },
             {
-              name: "Presentatie deck – template",
+              name: "Presentatie deck (template)",
               type: "file",
-              description:
-                "Basisdeck voor presentaties: titel, agenda, cases, quote- en beeldslides. In lijn met grids & visuele identiteit.",
-              tags: ["Presentatie", "Deck"]
+              description: "Slideset met vaste structuren: titel, agenda, case, quote, visuals — volgens gridregels.",
+              tags: ["Deck"]
             },
             {
               name: "Offerte-sjabloon",
               type: "file",
-              description:
-                "Template voor offertes met vaste structuur, voorblad en contentblokken in merkstijl.",
-              tags: ["Offerte", "Template"]
+              description: "Template met vaste hoofdstukken en blokken (scope, aanpak, planning, pricing) in merkstijl.",
+              tags: ["Sales"]
             },
             {
-              name: "Social templates (Post / Story / Reel)",
+              name: "Social templates (Post/Story/Reel)",
               type: "file",
-              description:
-                "Set van formaten voor sociale media die aansluiten op grid- en beeldregels. Bevat zones voor beeld, copy en call-to-action.",
-              tags: ["Social", "Templates"]
+              description: "Social formats die matchen met visuele regels: typografie, marges, beeldzones en CTA’s.",
+              tags: ["Social"]
             },
             {
               name: "Web & UI-tokens",
               type: "file",
-              description:
-                "Overzicht van digitale stijlelementen (buttons, spacing, radius, shadows) als design tokens voor developers.",
-              tags: ["UI", "Tokens"]
+              description: "Design tokens (kleur, type, spacing, radius, states) als brug tussen design en development.",
+              tags: ["UI"]
             }
           ]
         },
         {
-          name: "07 Campagne & Ads",
+          name: "07 Website & SEO",
           type: "folder",
-          description:
-            "Campagnemateriaal en advertentie-assets, inclusief afspraken rond partnerships en co-branding.",
-          tags: ["Campagnes", "Ads"],
-          children: [
-            {
-              name: "Campagne key visuals",
-              type: "file",
-              description:
-                "Hoofdvisuals per campagne, met uitleg over kernboodschap en kernbeeld.",
-              tags: ["Key visual", "Campagne"]
-            },
-            {
-              name: "Ad formats – exports",
-              type: "file",
-              description:
-                "Geëxporteerde advertentiebeelden in de vereiste formaten voor online en displaykanalen.",
-              tags: ["Ads", "Export"]
-            },
-            {
-              name: "Ad copy bank",
-              type: "file",
-              description:
-                "Voorraad aan goedgekeurde advertentieteksten per kanaal (Meta, Google, LinkedIn...).",
-              tags: ["Copy", "Ads"]
-            },
-            {
-              name: "Partnerships & co-branding",
-              type: "file",
-              description:
-                "Richtlijnen voor samenwerkingen: incoming/outgoing logo’s, lock-ups, white space en hiërarchie tussen merken.",
-              tags: ["Partnerships", "Co-branding"]
-            }
-          ]
-        },
-        {
-          name: "08 Website & SEO",
-          type: "folder",
-          description:
-            "Alles rond website, UX, webdesign en SEO: structuur, content en optimalisatie.",
-          tags: ["Website", "SEO"],
+          description: "Alles rond website-structuur, UX, content en SEO-optimalisatie (incl. meting).",
+          tags: ["Web", "SEO"],
           children: [
             {
               name: "Sitemap & paginaboom",
               type: "file",
-              description:
-                "Structuur van de website met hoofd- en subpagina’s. Startpunt voor contentplanning en navigatie.",
-              tags: ["Sitemap", "Structuur"]
+              description: "Informatiearchitectuur: overzicht van pagina’s, hiërarchie en navigatielogica.",
+              tags: ["IA"]
             },
             {
               name: "Wireframes & UX flows",
               type: "file",
-              description:
-                "Schetsen van cruciale flows (bijv. lead, checkout, demo-aanvraag) en de bijhorende schermen.",
-              tags: ["UX", "Wireframes"]
+              description: "Wireframes + user flows voor key journeys (lead, contact, demo, aankoop, etc.).",
+              tags: ["UX"]
             },
             {
-              name: "UI screens – webdesign overzicht",
+              name: "UI screens (webdesign)",
               type: "file",
-              description:
-                "Visuele ontwerpen van belangrijkste schermen (home, key landing pages, blog, contact).",
-              tags: ["UI", "Webdesign"]
+              description: "High-fidelity designs van kernpagina’s en componenten (home, landing, blog, contact).",
+              tags: ["UI"]
             },
             {
-              name: "SEO keywords & content plan",
+              name: "SEO keywords & contentplan",
               type: "file",
-              description:
-                "Overzicht van doelzoekwoorden per pagina, inclusief contentaanbevelingen en interne linkstructuur.",
-              tags: ["SEO", "Content"]
+              description: "Doelzoekwoorden per pagina + content-briefs en interne link-structuur.",
+              tags: ["SEO"]
             },
             {
               name: "Tracking & analytics plan",
               type: "file",
-              description:
-                "Welke events en doelen worden gemeten, met notities voor GA4, tags en dashboards.",
-              tags: ["Analytics", "KPI"]
+              description: "Meetplan met events, doelen en KPI’s (bv. GA4) zodat activatie meetbaar is.",
+              tags: ["Analytics"]
             }
           ]
         },
         {
-          name: "09 Archive (oude versies)",
+          name: "08 Contentstrategie",
           type: "folder",
-          description:
-            "Historische materialen en vorige versies. Handig als referentie, maar niet voor huidig gebruik.",
-          tags: ["Archief", "Versiebeheer"],
+          description: "Richting voor structurele content: thema’s, formats, kanalen, planning en meetkader.",
+          tags: ["Content", "Strategy"],
           children: [
             {
-              name: "Vorige logo-versies",
+              name: "Content pillars & thema’s",
               type: "file",
-              description:
-                "Enkel als referentie. Gebruik voor nieuwe communicatie altijd de actuele logo’s.",
-              tags: ["Logo", "Historiek"]
+              description: "Hoofdthema’s die het merk consequent wil claimen (en waarom).",
+              tags: ["Pillars"]
             },
             {
-              name: "Oude templates & layouts",
+              name: "Formats & contenttypes",
               type: "file",
-              description:
-                "Verouderde bestanden. Alleen raadplegen indien nodig, niet gebruiken voor nieuwe uitingen.",
-              tags: ["Templates", "Oud"]
+              description: "Welke formats werken (cases, thought leadership, how-to, video, nieuwsbrief, etc.) + guidelines.",
+              tags: ["Formats"]
+            },
+            {
+              name: "Kanaalstrategie",
+              type: "file",
+              description: "Rol per kanaal (website, LinkedIn, mail, paid) en hoe de tone of voice verschilt per kanaal.",
+              tags: ["Channels"]
+            },
+            {
+              name: "Editorial kalender",
+              type: "file",
+              description: "Planning en ritme: wat wanneer verschijnt, ownership, deadlines en reviewflow.",
+              tags: ["Planning"]
+            },
+            {
+              name: "KPI’s & evaluatie",
+              type: "file",
+              description: "Meetkader voor content (awareness, engagement, leads) + evaluatiemomenten en bijsturing.",
+              tags: ["KPI"]
+            }
+          ]
+        },
+        {
+          name: "09 Campagne & Ads",
+          type: "folder",
+          description: "Campagnes en advertenties: concept, assets, copy en afspraken voor co-branding/partnerships.",
+          tags: ["Campaign", "Ads"],
+          children: [
+            {
+              name: "Campagneconcepten",
+              type: "file",
+              description: "Conceptsheets of decks met idee, boodschap, doelgroep, kanalen en creatieve richting.",
+              tags: ["Concept"]
+            },
+            {
+              name: "Key visuals",
+              type: "file",
+              description: "Kernbeelden/visual system per campagne (varianten, crops, safe zones).",
+              tags: ["KV"]
+            },
+            {
+              name: "Ad formats & exports",
+              type: "file",
+              description: "Exports in juiste formaten voor platformen (Meta/Google/LinkedIn) incl. naming conventions.",
+              tags: ["Exports"]
+            },
+            {
+              name: "Ad copy bank",
+              type: "file",
+              description: "Goedkeurde varianten van headlines, primary text en CTA’s per kanaal.",
+              tags: ["Copy"]
+            },
+            {
+              name: "Partnerships & co-branding",
+              type: "file",
+              description: "Regels voor lock-ups, incoming/outgoing logo’s, white space en hiërarchie tussen merken.",
+              tags: ["Co-branding"]
             }
           ]
         }
       ]
     };
 
-    // ---------- UI LOGICA ----------
+    // ---------- UI ----------
     const treeRootEl = document.getElementById("tree-root");
     const detailsPanelEl = document.getElementById("details-panel");
     let activeItemEl = null;
@@ -820,9 +739,7 @@
       desc.className = "details-description";
       desc.textContent =
         node.description ||
-        (node.type === "folder"
-          ? "Map zonder extra beschrijving."
-          : "Bestand zonder extra beschrijving.");
+        (node.type === "folder" ? "Map zonder extra beschrijving." : "Bestand zonder extra beschrijving.");
 
       const tagsDiv = document.createElement("div");
       tagsDiv.className = "details-tags";
@@ -833,19 +750,16 @@
           t.textContent = tag;
           tagsDiv.appendChild(t);
         });
+      } else {
+        // geen tags → toon niets (geen lege ruimte)
+        tagsDiv.style.display = "none";
       }
-
-      const tip = document.createElement("div");
-      tip.className = "short-tip";
-      tip.innerHTML =
-        "<strong>Tip in Google Drive:</strong> gebruik deze omschrijving als mapbeschrijving of in een kort README-bestand, zodat iedereen meteen weet wat hier thuishoort.";
 
       detailsPanelEl.appendChild(title);
       detailsPanelEl.appendChild(type);
       detailsPanelEl.appendChild(pathDiv);
       detailsPanelEl.appendChild(tagsDiv);
       detailsPanelEl.appendChild(desc);
-      detailsPanelEl.appendChild(tip);
     }
 
     function createTreeNode(node, container, path = []) {
@@ -888,9 +802,7 @@
       if (node.children && node.children.length > 0) {
         childrenContainer = document.createElement("div");
         childrenContainer.className = "children";
-        node.children.forEach((child) =>
-          createTreeNode(child, childrenContainer, thisPath)
-        );
+        node.children.forEach((child) => createTreeNode(child, childrenContainer, thisPath));
         nodeWrapper.appendChild(childrenContainer);
       }
 
@@ -907,11 +819,8 @@
 
         if (childrenContainer) {
           const isCollapsed = childrenContainer.classList.toggle("collapsed");
-          if (isCollapsed) {
-            arrow.classList.remove("open");
-          } else {
-            arrow.classList.add("open");
-          }
+          if (isCollapsed) arrow.classList.remove("open");
+          else arrow.classList.add("open");
         }
       });
 
@@ -928,8 +837,8 @@
       container.appendChild(nodeWrapper);
     }
 
-    // Render de boom
     createTreeNode(brandStructure, treeRootEl, []);
   </script>
 </body>
 </html>
+
