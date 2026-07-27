@@ -1,925 +1,738 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <title>KAPMES Brand Folder Demo – Dark</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    :root {
-      /* KAPMES tones (flat: zwart / blauw / grijs — geen gradients) */
-      --abyss: #050506;
-      --panel: #121212;
-      --panel-2: #0f0f0f;
-      --border: #2b2b2b;
+<meta charset="UTF-8" />
+<title>T-Rex Dance Party</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #050506;
+    overflow: hidden;
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    touch-action: none;
+    cursor: grab;
+  }
+  canvas:active { cursor: grabbing; }
 
-      --text: #f7f7f7;
-      --muted: #b6b8ba;
-      --muted-2: #7a7a7a;
+  .overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
 
-      --blue: #0d44e3;
-      --blue-soft: rgba(13, 68, 227, 0.18);
+  .title {
+    font-size: 15px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #f7f7f7;
+    text-shadow: 0 0 18px rgba(13, 68, 227, 0.9), 0 0 40px rgba(255, 60, 180, 0.4);
+    font-weight: 600;
+  }
 
-      --radius: 12px;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
-      --transition: 0.18s ease-out;
-      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+  .subtitle {
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #9a9ca0;
+  }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: var(--font);
-      background: var(--abyss);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-    }
+  .hint {
+    align-self: flex-start;
+    font-size: 11px;
+    color: #7a7a7a;
+    letter-spacing: 0.05em;
+  }
 
-    .app {
-      max-width: 1200px;
-      margin: 32px auto 40px;
-      padding: 0 16px;
-    }
-
-    .app-header {
-      margin-bottom: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .app-header-text { min-width: 0; flex: 1; }
-
-    @media (max-width: 720px) {
-      .app-header { flex-direction: column; align-items: flex-start; }
-      .hero-3d { align-self: center; }
-    }
-
-    /* 3D CUBE ANIMATION */
-    .hero-3d {
-      flex-shrink: 0;
-      width: 120px;
-      height: 120px;
-      perspective: 700px;
-    }
-
-    .cube {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      animation: cube-spin 14s linear infinite;
-    }
-
-    .cube-face {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: inset 0 0 24px rgba(13, 68, 227, 0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .cube-face::after {
-      content: "";
-      position: absolute;
-      inset: 10px;
-      border: 1px solid rgba(13, 68, 227, 0.5);
-      box-shadow: 0 0 14px rgba(13, 68, 227, 0.35);
-    }
-
-    .cube-face.front  { transform: translateZ(60px); }
-    .cube-face.back   { transform: rotateY(180deg) translateZ(60px); }
-    .cube-face.right  { transform: rotateY(90deg) translateZ(60px); }
-    .cube-face.left   { transform: rotateY(-90deg) translateZ(60px); }
-    .cube-face.top    { transform: rotateX(90deg) translateZ(60px); }
-    .cube-face.bottom { transform: rotateX(-90deg) translateZ(60px); }
-
-    @keyframes cube-spin {
-      from { transform: rotateX(0deg) rotateY(0deg); }
-      to   { transform: rotateX(360deg) rotateY(360deg); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .cube { animation: none; transform: rotateX(-18deg) rotateY(28deg); }
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #090909;
-      border: 1px solid #272727;
-      color: var(--muted);
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--blue);
-      box-shadow: 0 0 12px rgba(13, 68, 227, 0.9);
-    }
-
-    h1 {
-      font-size: 28px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      margin: 14px 0 6px;
-      font-weight: 500;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: var(--muted);
-      max-width: 620px;
-      line-height: 1.6;
-      margin: 0 0 10px;
-    }
-
-    .hint {
-      font-size: 11px;
-      color: var(--muted);
-      opacity: 0.8;
-      margin: 0;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.3fr);
-      gap: 18px;
-      margin-top: 16px;
-    }
-
-    @media (max-width: 880px) {
-      .layout { grid-template-columns: 1fr; }
-    }
-
-    .panel {
-      background: var(--panel);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 14px 14px 16px;
-      overflow: hidden;
-    }
-
-    .panel-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-    }
-
-    .panel-title h2 {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .panel-title span {
-      font-size: 11px;
-      color: var(--muted-2);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .panel-body {
-      border-top: 1px solid var(--border);
-      margin-top: 10px;
-      padding-top: 10px;
-      max-height: 560px;
-      overflow: auto;
-    }
-
-    .panel-body::-webkit-scrollbar { width: 6px; }
-    .panel-body::-webkit-scrollbar-track { background: transparent; }
-    .panel-body::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 999px; }
-
-    /* TREE */
-    .tree-root { font-size: 13px; }
-    .tree-node { margin-left: 4px; }
-
-    .tree-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 6px;
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-    }
-
-    .tree-item:hover {
-      background: #1a1a1a;
-      box-shadow: 0 0 0 1px #232323;
-    }
-
-    .tree-item.active {
-      background: var(--blue-soft);
-      box-shadow: 0 0 0 1px rgba(13, 68, 227, 0.7);
-      transform: translateX(1px);
-    }
-
-    .tree-label-main {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .tree-icon { font-size: 16px; width: 18px; text-align: center; }
-    .tree-name { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-
-    .tree-meta {
-      font-size: 10px;
-      color: var(--muted-2);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-
-    .tree-arrow {
-      font-size: 11px;
-      width: 14px;
-      text-align: center;
-      color: var(--muted);
-      transition: transform var(--transition), opacity var(--transition);
-      opacity: 0.7;
-    }
-
-    .tree-arrow.open { transform: rotate(90deg); opacity: 1; }
-
-    .children {
-      margin-left: 18px;
-      border-left: 1px dashed var(--border);
-      padding-left: 6px;
-      margin-top: 2px;
-    }
-
-    .children.collapsed { display: none; }
-
-    /* DETAILS */
-    .details-empty {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .details-empty ul { padding-left: 18px; margin: 6px 0 0; }
-    .details-empty li { margin-bottom: 2px; }
-
-    .details-title {
-      font-size: 18px;
-      font-weight: 500;
-      margin: 0 0 6px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .details-type {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--muted-2);
-      margin-bottom: 8px;
-    }
-
-    .details-path {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      opacity: 0.8;
-    }
-
-    .details-description {
-      font-size: 13px;
-      line-height: 1.7;
-      margin-bottom: 12px;
-      color: var(--text);
-    }
-
-    .details-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    .tag {
-      font-size: 11px;
-      padding: 2px 10px;
-      border-radius: 999px;
-      border: 1px solid #3a3a3a;
-      background: var(--panel-2);
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-  </style>
+  .vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 45%, rgba(0,0,0,0.55) 100%);
+  }
+</style>
 </head>
 <body>
-  <div class="app">
-    <header class="app-header">
-      <div class="app-header-text">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          KAPMES · BRAND FOLDER DEMO
-        </div>
-        <h1>REDEFINING THE SPACE OF FOLDERS</h1>
-        <p class="subtitle">Een interactieve demo van hoe jullie Google Drive brand folder is opgebouwd.</p>
-        <p class="hint">Klik links door de structuur. Rechts krijg je per map/bestand de bedoeling en inhoud.</p>
-      </div>
-      <div class="hero-3d" aria-hidden="true">
-        <div class="cube">
-          <div class="cube-face front">KAPMES</div>
-          <div class="cube-face back">BRAND</div>
-          <div class="cube-face right">FOLDER</div>
-          <div class="cube-face left">SYSTEM</div>
-          <div class="cube-face top">2026</div>
-          <div class="cube-face bottom">CORE</div>
-        </div>
-      </div>
-    </header>
-
-    <main class="layout">
-      <!-- LEFT PANEL -->
-      <section class="panel">
-        <div class="panel-title">
-          <h2>STRUCTUUR</h2>
-          <span>klik om te verkennen</span>
-        </div>
-        <div class="panel-body">
-          <div id="tree-root" class="tree-root"></div>
-        </div>
-      </section>
-
-      <!-- RIGHT PANEL -->
-      <section class="panel">
-        <div class="panel-title">
-          <h2>DETAILS</h2>
-          <span>context & uitleg</span>
-        </div>
-        <div class="panel-body" id="details-panel">
-          <div class="details-empty">
-            Selecteer een map of bestand links om hier uitleg te zien.<br /><br />
-            Dit paneel helpt klanten (en teams) begrijpen:
-            <ul>
-              <li>waar ze wat vinden</li>
-              <li>wat “bron-documenten” zijn vs. templates</li>
-              <li>wat de logische volgorde is (strategie → identiteit → toepassing)</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </main>
+<canvas id="gl"></canvas>
+<div class="vignette"></div>
+<div class="overlay">
+  <div>
+    <div class="title">T-Rex Dance Party</div>
+    <div class="subtitle">Een 3D dino grooft op het ritme &mdash; volledig WebGL, geen libraries.</div>
   </div>
+  <div class="hint">Sleep om rond te kijken</div>
+</div>
 
-  <script>
-    // ---------- BRAND FOLDER STRUCTUUR (met beschrijvingen) ----------
-    const brandStructure = {
-      name: "Brand Folder",
-      type: "folder",
-      description: "Centrale hub met alle merkstrategische documenten, identity assets en toepassingen.",
-      tags: ["Overzicht", "Brand Hub"],
-      children: [
-        {
-          name: "01 Merkstrategie",
-          type: "folder",
-          description: "CORE strategie: wie we zijn, waar we voor staan en hoe we ons positioneren in de markt.",
-          tags: ["Core", "Why/How"],
-          children: [
-            {
-              name: "Kernidentiteit",
-              type: "file",
-              description: "Purpose, missie, visie en merkbelofte in één helder document. Basis voor alle beslissingen.",
-              tags: ["Core", "Identity"]
-            },
-            {
-              name: "Positionering statement",
-              type: "file",
-              description: "Kort en krachtig: voor wie we er zijn, wat we beloven, en waarom we verschillen.",
-              tags: ["Positionering"]
-            },
-            {
-              name: "Doelgroepen",
-              type: "file",
-              description: "Overzicht van doelgroepen/segmenten met noden, triggers en belangrijkste context.",
-              tags: ["Audience", "Segmenten"]
-            },
-            {
-              name: "Waarden & Cultuur (EVP)",
-              type: "file",
-              description: "Merkwaarden + cultuurprincipes. Inclusief EVP: wat medewerkers mogen verwachten en bijdragen.",
-              tags: ["Culture", "EVP"]
-            },
-            {
-              name: "USP’s / Differentiators",
-              type: "file",
-              description: "Concrete onderscheiders en bewijzen (proof points) die de positionering geloofwaardig maken.",
-              tags: ["USP", "Proof"]
-            },
-            {
-              name: "Merkarchitectuur",
-              type: "file",
-              description: "Structuur van hoofdmerk, submerken, productlijnen en naming-logica.",
-              tags: ["Architectuur"]
-            },
-            {
-              name: "Merkpersoonlijkheid & archetypen",
-              type: "file",
-              description: "Karakter van het merk: archetypen, gedrag en communicatie-implicaties voor content en design.",
-              tags: ["Archetypen", "Personality"]
-            }
-          ]
-        },
-        {
-          name: "02 Verbale Identiteit",
-          type: "folder",
-          description: "CREATIE (CORE): hoe het merk spreekt, schrijft en overtuigt — consistent over alle kanalen.",
-          tags: ["Copy", "Tone"],
-          children: [
-            {
-              name: "Naam & schrijfwijze",
-              type: "file",
-              description: "Officiële naam, schrijfwijze, hoofdletters, afkortingen en fout-voorbeelden.",
-              tags: ["Naming"]
-            },
-            {
-              name: "Tone of Voice",
-              type: "file",
-              description: "Toon, stijl, woordkeuzes, do’s & don’ts en voorbeeldzinnen per situatie.",
-              tags: ["TOV", "Guidelines"]
-            },
-            {
-              name: "Baseline / Tagline",
-              type: "file",
-              description: "Baseline(s) met gebruikscontext: wanneer wel/niet inzetten, varianten en vertalingen.",
-              tags: ["Tagline"]
-            },
-            {
-              name: "Messaging-piramide",
-              type: "file",
-              description: "Hiërarchie van boodschappen: kern → ondersteunend → bewijs. Handig voor sales, web en campagnes.",
-              tags: ["Messaging"]
-            },
-            {
-              name: "Boilerplates",
-              type: "file",
-              description: "Standaard korte & lange ‘over ons’-teksten voor pers, website, decks en partners.",
-              tags: ["Boilerplate"]
-            }
-          ]
-        },
-        {
-          name: "03 Visuele Identiteit",
-          type: "folder",
-          description: "CREATIE (CORE): visuele bouwstenen die het merk herkenbaar maken en toepasbaar houden.",
-          tags: ["Design", "System"],
-          children: [
-            {
-              name: "Logo & versies",
-              type: "folder",
-              description: "Alle goedgekeurde logo-varianten + regels rond clear space, minimumgrootte en achtergrondgebruik.",
-              tags: ["Logo"],
-              children: [
-                {
-                  name: "Primary logo (master)",
-                  type: "file",
-                  description: "Master-bestand + kernregels (clear space, min. size, correcte plaatsing).",
-                  tags: ["Master"]
-                },
-                {
-                  name: "Varianten (stacked / horizontal)",
-                  type: "file",
-                  description: "Varianten voor verschillende formaten en toepassingen (smal, breed, vertical).",
-                  tags: ["Variants"]
-                },
-                {
-                  name: "Monochroom & inverted",
-                  type: "file",
-                  description: "Versies voor éénkleurendruk en donkere/drukke achtergronden.",
-                  tags: ["Mono", "Inverted"]
-                }
-              ]
-            },
-            {
-              name: "Kleurpalet",
-              type: "file",
-              description: "Primair/secondair palet met HEX/RGB/CMYK + contrastregels en toegankelijkheidsnotities.",
-              tags: ["Color"]
-            },
-            {
-              name: "Typografie",
-              type: "file",
-              description: "Lettertypes, hiërarchie, schaal, line-height en voorbeelden voor print en digitaal.",
-              tags: ["Type"]
-            },
-            {
-              name: "Grids & lay-outs",
-              type: "file",
-              description: "Layoutregels: marges, kolommen, baseline grid en component-opbouw.",
-              tags: ["Grid"]
-            },
-            {
-              name: "Visuele elementen",
-              type: "file",
-              description: "Iconenset, illustratiestijl, vormen, patterns en grafische ‘brand devices’.",
-              tags: ["Assets"]
-            },
-            {
-              name: "Fotogids",
-              type: "file",
-              description: "Fotostijl: onderwerpkeuze, sfeer, kleur, kadrering en wat ‘off-brand’ is.",
-              tags: ["Photo"]
-            },
-            {
-              name: "Video guidelines",
-              type: "file",
-              description: "Regels voor video: tempo, overlays, ondertitels, intro/outro en eventuele motion-principes.",
-              tags: ["Video"]
-            }
-          ]
-        },
-        {
-          name: "04 Brand Atlas",
-          type: "folder",
-          description: "Het kompas: één centrale plek waar teams snel de ‘waarom’, regels en praktijkvoorbeelden vinden.",
-          tags: ["Reference", "Playbook"],
-          children: [
-            {
-              name: "Merkessentie (WHY–HOW–WHAT)",
-              type: "file",
-              description: "Samenvatting van de merkessentie: wie we zijn, wat we doen en hoe we dat doen.",
-              tags: ["Essentie"]
-            },
-            {
-              name: "Brand principes & beslisregels",
-              type: "file",
-              description: "Praktische ‘if-this-then-that’ regels die helpen consistent keuzes maken in content & design.",
-              tags: ["Principes"]
-            },
-            {
-              name: "Do’s & Don’ts (verbaal + visueel)",
-              type: "file",
-              description: "Concrete voorbeelden van correcte en foutieve toepassingen in taal en beeld.",
-              tags: ["Do/Don't"]
-            },
-            {
-              name: "Brand in practice (voorbeeldcases)",
-              type: "file",
-              description: "Voorbeelden van correcte toepassingen: social, deck, ad, websectie — als referentie.",
-              tags: ["Examples"]
-            },
-            {
-              name: "Governance & ownership",
-              type: "file",
-              description: "Wie beheert wat, hoe updates gebeuren en hoe aanvragen voor nieuwe assets lopen.",
-              tags: ["Process"]
-            },
-            {
-              name: "Versiebeheer & changelog",
-              type: "file",
-              description: "Logboek van wijzigingen (wat/wanneer/waarom) zodat iedereen met de juiste versie werkt.",
-              tags: ["Changelog"]
-            }
-          ]
-        },
-        {
-          name: "05 Print Assets & Templates",
-          type: "folder",
-          description: "ACTIVATIE (CORE) voor print: templates en drukwerkklaar materiaal voor offline toepassingen.",
-          tags: ["Print", "Activation"],
-          children: [
-            {
-              name: "Stationery – visitekaart",
-              type: "file",
-              description: "Drukwerkklaar template met vaste velden, marges en correcte logo-plaatsing.",
-              tags: ["Stationery"]
-            },
-            {
-              name: "Stationery – briefpapier",
-              type: "file",
-              description: "Template (A4) met grid, typografie en vaste zones voor adres/footers.",
-              tags: ["Stationery"]
-            },
-            {
-              name: "Packaging / labels",
-              type: "file",
-              description: "Basisopzetten voor verpakking of labels met aandacht voor leesbaarheid en merkimpact.",
-              tags: ["Packaging"]
-            },
-            {
-              name: "Signage / wayfinding",
-              type: "file",
-              description: "Layouts en richtlijnen voor signalisatie, beursmateriaal en fysieke touchpoints.",
-              tags: ["Signage"]
-            }
-          ]
-        },
-        {
-          name: "06 Digital Assets & Templates",
-          type: "folder",
-          description: "ACTIVATIE (CORE) digitaal: herbruikbare templates en assets voor dagelijkse communicatie.",
-          tags: ["Digital", "Activation"],
-          children: [
-            {
-              name: "E-mail signature",
-              type: "file",
-              description: "Handtekening-template + instructies voor installatie (Gmail/Outlook) en varianten per team.",
-              tags: ["Email"]
-            },
-            {
-              name: "Presentatie deck (template)",
-              type: "file",
-              description: "Slideset met vaste structuren: titel, agenda, case, quote, visuals — volgens gridregels.",
-              tags: ["Deck"]
-            },
-            {
-              name: "Offerte-sjabloon",
-              type: "file",
-              description: "Template met vaste hoofdstukken en blokken (scope, aanpak, planning, pricing) in merkstijl.",
-              tags: ["Sales"]
-            },
-            {
-              name: "Social templates (Post/Story/Reel)",
-              type: "file",
-              description: "Social formats die matchen met visuele regels: typografie, marges, beeldzones en CTA’s.",
-              tags: ["Social"]
-            },
-            {
-              name: "Web & UI-tokens",
-              type: "file",
-              description: "Design tokens (kleur, type, spacing, radius, states) als brug tussen design en development.",
-              tags: ["UI"]
-            }
-          ]
-        },
-        {
-          name: "07 Website & SEO",
-          type: "folder",
-          description: "Alles rond website-structuur, UX, content en SEO-optimalisatie (incl. meting).",
-          tags: ["Web", "SEO"],
-          children: [
-            {
-              name: "Sitemap & paginaboom",
-              type: "file",
-              description: "Informatiearchitectuur: overzicht van pagina’s, hiërarchie en navigatielogica.",
-              tags: ["IA"]
-            },
-            {
-              name: "Wireframes & UX flows",
-              type: "file",
-              description: "Wireframes + user flows voor key journeys (lead, contact, demo, aankoop, etc.).",
-              tags: ["UX"]
-            },
-            {
-              name: "UI screens (webdesign)",
-              type: "file",
-              description: "High-fidelity designs van kernpagina’s en componenten (home, landing, blog, contact).",
-              tags: ["UI"]
-            },
-            {
-              name: "SEO keywords & contentplan",
-              type: "file",
-              description: "Doelzoekwoorden per pagina + content-briefs en interne link-structuur.",
-              tags: ["SEO"]
-            },
-            {
-              name: "Tracking & analytics plan",
-              type: "file",
-              description: "Meetplan met events, doelen en KPI’s (bv. GA4) zodat activatie meetbaar is.",
-              tags: ["Analytics"]
-            }
-          ]
-        },
-        {
-          name: "08 Contentstrategie",
-          type: "folder",
-          description: "Richting voor structurele content: thema’s, formats, kanalen, planning en meetkader.",
-          tags: ["Content", "Strategy"],
-          children: [
-            {
-              name: "Content pillars & thema’s",
-              type: "file",
-              description: "Hoofdthema’s die het merk consequent wil claimen (en waarom).",
-              tags: ["Pillars"]
-            },
-            {
-              name: "Formats & contenttypes",
-              type: "file",
-              description: "Welke formats werken (cases, thought leadership, how-to, video, nieuwsbrief, etc.) + guidelines.",
-              tags: ["Formats"]
-            },
-            {
-              name: "Kanaalstrategie",
-              type: "file",
-              description: "Rol per kanaal (website, LinkedIn, mail, paid) en hoe de tone of voice verschilt per kanaal.",
-              tags: ["Channels"]
-            },
-            {
-              name: "Editorial kalender",
-              type: "file",
-              description: "Planning en ritme: wat wanneer verschijnt, ownership, deadlines en reviewflow.",
-              tags: ["Planning"]
-            },
-            {
-              name: "KPI’s & evaluatie",
-              type: "file",
-              description: "Meetkader voor content (awareness, engagement, leads) + evaluatiemomenten en bijsturing.",
-              tags: ["KPI"]
-            }
-          ]
-        },
-        {
-          name: "09 Campagne & Ads",
-          type: "folder",
-          description: "Campagnes en advertenties: concept, assets, copy en afspraken voor co-branding/partnerships.",
-          tags: ["Campaign", "Ads"],
-          children: [
-            {
-              name: "Campagneconcepten",
-              type: "file",
-              description: "Conceptsheets of decks met idee, boodschap, doelgroep, kanalen en creatieve richting.",
-              tags: ["Concept"]
-            },
-            {
-              name: "Key visuals",
-              type: "file",
-              description: "Kernbeelden/visual system per campagne (varianten, crops, safe zones).",
-              tags: ["KV"]
-            },
-            {
-              name: "Ad formats & exports",
-              type: "file",
-              description: "Exports in juiste formaten voor platformen (Meta/Google/LinkedIn) incl. naming conventions.",
-              tags: ["Exports"]
-            },
-            {
-              name: "Ad copy bank",
-              type: "file",
-              description: "Goedkeurde varianten van headlines, primary text en CTA’s per kanaal.",
-              tags: ["Copy"]
-            },
-            {
-              name: "Partnerships & co-branding",
-              type: "file",
-              description: "Regels voor lock-ups, incoming/outgoing logo’s, white space en hiërarchie tussen merken.",
-              tags: ["Co-branding"]
-            }
-          ]
-        }
-      ]
-    };
+<script>
+"use strict";
 
-    // ---------- UI ----------
-    const treeRootEl = document.getElementById("tree-root");
-    const detailsPanelEl = document.getElementById("details-panel");
-    let activeItemEl = null;
+/* ---------------------------------------------------------------------
+   Minimal mat4 / mat3 math (column-major, WebGL convention)
+--------------------------------------------------------------------- */
+function mat4Identity() { return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]); }
 
-    function showDetails(node, path) {
-      detailsPanelEl.innerHTML = "";
+function mat4Multiply(a, b) {
+  const out = new Float32Array(16);
+  for (let c = 0; c < 4; c++) {
+    for (let r = 0; r < 4; r++) {
+      let sum = 0;
+      for (let k = 0; k < 4; k++) sum += a[k*4+r] * b[c*4+k];
+      out[c*4+r] = sum;
+    }
+  }
+  return out;
+}
 
-      const title = document.createElement("h3");
-      title.className = "details-title";
-      const icon = document.createElement("span");
-      icon.textContent = node.type === "folder" ? "📁" : "📄";
-      const text = document.createElement("span");
-      text.textContent = node.name;
-      title.appendChild(icon);
-      title.appendChild(text);
+function mat4Translate(m, x, y, z) {
+  const t = mat4Identity();
+  t[12] = x; t[13] = y; t[14] = z;
+  return mat4Multiply(m, t);
+}
 
-      const type = document.createElement("div");
-      type.className = "details-type";
-      type.textContent = node.type === "folder" ? "MAP" : "BESTAND";
+function mat4RotateX(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const r = mat4Identity();
+  r[5] = c; r[6] = s; r[9] = -s; r[10] = c;
+  return mat4Multiply(m, r);
+}
 
-      const pathDiv = document.createElement("div");
-      pathDiv.className = "details-path";
-      pathDiv.textContent = "Pad: " + path.join(" / ");
+function mat4RotateY(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const r = mat4Identity();
+  r[0] = c; r[2] = -s; r[8] = s; r[10] = c;
+  return mat4Multiply(m, r);
+}
 
-      const desc = document.createElement("div");
-      desc.className = "details-description";
-      desc.textContent =
-        node.description ||
-        (node.type === "folder" ? "Map zonder extra beschrijving." : "Bestand zonder extra beschrijving.");
+function mat4RotateZ(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const r = mat4Identity();
+  r[0] = c; r[1] = s; r[4] = -s; r[5] = c;
+  return mat4Multiply(m, r);
+}
 
-      const tagsDiv = document.createElement("div");
-      tagsDiv.className = "details-tags";
-      if (node.tags && node.tags.length) {
-        node.tags.forEach((tag) => {
-          const t = document.createElement("span");
-          t.className = "tag";
-          t.textContent = tag;
-          tagsDiv.appendChild(t);
-        });
-      } else {
-        // geen tags → toon niets (geen lege ruimte)
-        tagsDiv.style.display = "none";
-      }
+function mat4Scale(m, x, y, z) {
+  const s = mat4Identity();
+  s[0] = x; s[5] = y; s[10] = z;
+  return mat4Multiply(m, s);
+}
 
-      detailsPanelEl.appendChild(title);
-      detailsPanelEl.appendChild(type);
-      detailsPanelEl.appendChild(pathDiv);
-      detailsPanelEl.appendChild(tagsDiv);
-      detailsPanelEl.appendChild(desc);
+function mat4Perspective(fovy, aspect, near, far) {
+  const f = 1 / Math.tan(fovy / 2);
+  const out = new Float32Array(16);
+  out[0] = f / aspect;
+  out[5] = f;
+  out[10] = (far + near) / (near - far);
+  out[11] = -1;
+  out[14] = (2 * far * near) / (near - far);
+  return out;
+}
+
+function vSub(a, b) { return [a[0]-b[0], a[1]-b[1], a[2]-b[2]]; }
+function vCross(a, b) { return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
+function vNorm(a) { const l = Math.hypot(a[0],a[1],a[2]) || 1; return [a[0]/l, a[1]/l, a[2]/l]; }
+function vDot(a, b) { return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]; }
+
+function mat4LookAt(eye, target, up) {
+  const z = vNorm(vSub(eye, target));
+  const x = vNorm(vCross(up, z));
+  const y = vCross(z, x);
+  const out = new Float32Array(16);
+  out[0]=x[0]; out[1]=y[0]; out[2]=z[0]; out[3]=0;
+  out[4]=x[1]; out[5]=y[1]; out[6]=z[1]; out[7]=0;
+  out[8]=x[2]; out[9]=y[2]; out[10]=z[2]; out[11]=0;
+  out[12]=-vDot(x,eye); out[13]=-vDot(y,eye); out[14]=-vDot(z,eye); out[15]=1;
+  return out;
+}
+
+function mat3Identity() { return new Float32Array([1,0,0, 0,1,0, 0,0,1]); }
+
+function mat3Multiply(a, b) {
+  const out = new Float32Array(9);
+  for (let c = 0; c < 3; c++) {
+    for (let r = 0; r < 3; r++) {
+      let sum = 0;
+      for (let k = 0; k < 3; k++) sum += a[k*3+r] * b[c*3+k];
+      out[c*3+r] = sum;
+    }
+  }
+  return out;
+}
+
+function mat3RotateX(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const r = mat3Identity();
+  r[4] = c; r[5] = s; r[7] = -s; r[8] = c;
+  return mat3Multiply(m, r);
+}
+
+function mat3RotateY(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const r = mat3Identity();
+  r[0] = c; r[2] = -s; r[6] = s; r[8] = c;
+  return mat3Multiply(m, r);
+}
+
+function mat3RotateZ(m, rad) {
+  const c = Math.cos(rad), s = Math.sin(rad);
+  const r = mat3Identity();
+  r[0] = c; r[1] = s; r[3] = -s; r[4] = c;
+  return mat3Multiply(m, r);
+}
+
+/* ---------------------------------------------------------------------
+   WebGL setup
+--------------------------------------------------------------------- */
+const canvas = document.getElementById("gl");
+const gl = canvas.getContext("webgl", { antialias: true, alpha: false });
+if (!gl) {
+  document.body.innerHTML = "<p style='color:#fff;padding:24px;font-family:sans-serif'>WebGL wordt niet ondersteund in deze browser.</p>";
+  throw new Error("no webgl");
+}
+
+function compileShader(src, type) {
+  const sh = gl.createShader(type);
+  gl.shaderSource(sh, src);
+  gl.compileShader(sh);
+  if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+    throw new Error(gl.getShaderInfoLog(sh));
+  }
+  return sh;
+}
+
+function createProgram(vsSrc, fsSrc) {
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compileShader(vsSrc, gl.VERTEX_SHADER));
+  gl.attachShader(prog, compileShader(fsSrc, gl.FRAGMENT_SHADER));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    throw new Error(gl.getProgramInfoLog(prog));
+  }
+  return prog;
+}
+
+/* ---- Solid mesh (boxes) shader ---- */
+const solidVS = `
+  attribute vec3 aPosition;
+  attribute vec3 aNormal;
+  uniform mat4 uModel;
+  uniform mat4 uViewProj;
+  uniform mat3 uNormalMatrix;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  void main() {
+    vec4 worldPos = uModel * vec4(aPosition, 1.0);
+    vWorldPos = worldPos.xyz;
+    vNormal = normalize(uNormalMatrix * aNormal);
+    gl_Position = uViewProj * worldPos;
+  }
+`;
+
+const solidFS = `
+  precision mediump float;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  uniform vec3 uColor;
+  uniform vec3 uCameraPos;
+  uniform vec3 uSunDir;
+  uniform vec3 uLightPos[3];
+  uniform vec3 uLightColor[3];
+
+  void main() {
+    vec3 N = normalize(vNormal);
+    vec3 ambient = uColor * 0.4;
+    float sunDiff = max(dot(N, normalize(uSunDir)), 0.0);
+    vec3 diffuse = uColor * sunDiff * 0.7;
+
+    vec3 pointLit = vec3(0.0);
+    for (int i = 0; i < 3; i++) {
+      vec3 toLight = uLightPos[i] - vWorldPos;
+      float dist = length(toLight);
+      float atten = 1.0 / (1.0 + 0.06 * dist + 0.02 * dist * dist);
+      float d = max(dot(N, normalize(toLight)), 0.0);
+      pointLit += uLightColor[i] * d * atten;
     }
 
-    function createTreeNode(node, container, path = []) {
-      const thisPath = [...path, node.name];
+    vec3 V = normalize(uCameraPos - vWorldPos);
+    float rim = pow(1.0 - max(dot(N, V), 0.0), 2.2);
+    vec3 rimColor = rim * vec3(0.18, 0.28, 0.55);
 
-      const nodeWrapper = document.createElement("div");
-      nodeWrapper.className = "tree-node";
+    vec3 color = ambient + diffuse + pointLit * 0.55 + rimColor;
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
 
-      const item = document.createElement("div");
-      item.className = "tree-item";
+const solidProg = createProgram(solidVS, solidFS);
+const solidLoc = {
+  aPosition: gl.getAttribLocation(solidProg, "aPosition"),
+  aNormal: gl.getAttribLocation(solidProg, "aNormal"),
+  uModel: gl.getUniformLocation(solidProg, "uModel"),
+  uViewProj: gl.getUniformLocation(solidProg, "uViewProj"),
+  uNormalMatrix: gl.getUniformLocation(solidProg, "uNormalMatrix"),
+  uColor: gl.getUniformLocation(solidProg, "uColor"),
+  uCameraPos: gl.getUniformLocation(solidProg, "uCameraPos"),
+  uSunDir: gl.getUniformLocation(solidProg, "uSunDir"),
+  uLightPos: gl.getUniformLocation(solidProg, "uLightPos[0]"),
+  uLightColor: gl.getUniformLocation(solidProg, "uLightColor[0]"),
+};
 
-      const arrow = document.createElement("span");
-      arrow.className = "tree-arrow";
-      arrow.textContent = node.type === "folder" ? "▶" : "";
+/* ---- Unit cube geometry (flat-shaded, -0.5..0.5) ---- */
+function buildCube() {
+  const p = [
+    // +Z
+    -0.5,-0.5, 0.5,  0.5,-0.5, 0.5,  0.5, 0.5, 0.5,  -0.5, 0.5, 0.5,
+    // -Z
+     0.5,-0.5,-0.5, -0.5,-0.5,-0.5, -0.5, 0.5,-0.5,   0.5, 0.5,-0.5,
+    // +X
+     0.5,-0.5, 0.5,  0.5,-0.5,-0.5,  0.5, 0.5,-0.5,   0.5, 0.5, 0.5,
+    // -X
+    -0.5,-0.5,-0.5, -0.5,-0.5, 0.5, -0.5, 0.5, 0.5,  -0.5, 0.5,-0.5,
+    // +Y
+    -0.5, 0.5, 0.5,  0.5, 0.5, 0.5,  0.5, 0.5,-0.5,  -0.5, 0.5,-0.5,
+    // -Y
+    -0.5,-0.5,-0.5,  0.5,-0.5,-0.5,  0.5,-0.5, 0.5,  -0.5,-0.5, 0.5,
+  ];
+  const n = [
+    0,0,1, 0,0,1, 0,0,1, 0,0,1,
+    0,0,-1, 0,0,-1, 0,0,-1, 0,0,-1,
+    1,0,0, 1,0,0, 1,0,0, 1,0,0,
+    -1,0,0, -1,0,0, -1,0,0, -1,0,0,
+    0,1,0, 0,1,0, 0,1,0, 0,1,0,
+    0,-1,0, 0,-1,0, 0,-1,0, 0,-1,0,
+  ];
+  const idx = [];
+  for (let f = 0; f < 6; f++) {
+    const b = f * 4;
+    idx.push(b, b+1, b+2, b, b+2, b+3);
+  }
+  return { positions: new Float32Array(p), normals: new Float32Array(n), indices: new Uint16Array(idx) };
+}
 
-      const labelMain = document.createElement("div");
-      labelMain.className = "tree-label-main";
+const cube = buildCube();
+const cubeVBO = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, cubeVBO);
+gl.bufferData(gl.ARRAY_BUFFER, cube.positions, gl.STATIC_DRAW);
 
-      const icon = document.createElement("span");
-      icon.className = "tree-icon";
-      icon.textContent = node.type === "folder" ? "📁" : "📄";
+const cubeNBO = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, cubeNBO);
+gl.bufferData(gl.ARRAY_BUFFER, cube.normals, gl.STATIC_DRAW);
 
-      const name = document.createElement("span");
-      name.className = "tree-name";
-      name.textContent = node.name;
+const cubeIBO = gl.createBuffer();
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIBO);
+gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, cube.indices, gl.STATIC_DRAW);
 
-      labelMain.appendChild(icon);
-      labelMain.appendChild(name);
+function bindCubeAttribs() {
+  gl.bindBuffer(gl.ARRAY_BUFFER, cubeVBO);
+  gl.enableVertexAttribArray(solidLoc.aPosition);
+  gl.vertexAttribPointer(solidLoc.aPosition, 3, gl.FLOAT, false, 0, 0);
 
-      const meta = document.createElement("span");
-      meta.className = "tree-meta";
-      meta.textContent = node.type === "folder" ? "MAP" : "FILE";
+  gl.bindBuffer(gl.ARRAY_BUFFER, cubeNBO);
+  gl.enableVertexAttribArray(solidLoc.aNormal);
+  gl.vertexAttribPointer(solidLoc.aNormal, 3, gl.FLOAT, false, 0, 0);
 
-      item.appendChild(arrow);
-      item.appendChild(labelMain);
-      item.appendChild(meta);
-      nodeWrapper.appendChild(item);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeIBO);
+}
 
-      let childrenContainer = null;
-      if (node.children && node.children.length > 0) {
-        childrenContainer = document.createElement("div");
-        childrenContainer.className = "children";
-        node.children.forEach((child) => createTreeNode(child, childrenContainer, thisPath));
-        nodeWrapper.appendChild(childrenContainer);
-      }
+/* ---------------------------------------------------------------------
+   Transform stack (position matrix + rotation-only matrix for normals)
+--------------------------------------------------------------------- */
+let posStack = [mat4Identity()];
+let rotStack = [mat3Identity()];
 
-      item.addEventListener("click", (e) => {
-        e.stopPropagation();
+function push() {
+  posStack.push(posStack[posStack.length - 1]);
+  rotStack.push(rotStack[rotStack.length - 1]);
+}
+function pop() { posStack.pop(); rotStack.pop(); }
+function curPos() { return posStack[posStack.length - 1]; }
+function curRot() { return rotStack[rotStack.length - 1]; }
 
-        if (activeItemEl && activeItemEl !== item) {
-          activeItemEl.classList.remove("active");
-        }
-        item.classList.add("active");
-        activeItemEl = item;
+function translate(x, y, z) {
+  posStack[posStack.length - 1] = mat4Translate(curPos(), x, y, z);
+}
+function rotateX(rad) {
+  posStack[posStack.length - 1] = mat4RotateX(curPos(), rad);
+  rotStack[rotStack.length - 1] = mat3RotateX(curRot(), rad);
+}
+function rotateY(rad) {
+  posStack[posStack.length - 1] = mat4RotateY(curPos(), rad);
+  rotStack[rotStack.length - 1] = mat3RotateY(curRot(), rad);
+}
+function rotateZ(rad) {
+  posStack[posStack.length - 1] = mat4RotateZ(curPos(), rad);
+  rotStack[rotStack.length - 1] = mat3RotateZ(curRot(), rad);
+}
 
-        showDetails(node, thisPath);
+function drawBox(sx, sy, sz, color, offset) {
+  let m = curPos();
+  if (offset && (offset[0] || offset[1] || offset[2])) {
+    m = mat4Translate(m, offset[0], offset[1], offset[2]);
+  }
+  m = mat4Scale(m, sx, sy, sz);
+  gl.uniformMatrix4fv(solidLoc.uModel, false, m);
+  gl.uniformMatrix3fv(solidLoc.uNormalMatrix, false, curRot());
+  gl.uniform3fv(solidLoc.uColor, color);
+  gl.drawElements(gl.TRIANGLES, 36, gl.UNSIGNED_SHORT, 0);
+}
 
-        if (childrenContainer) {
-          const isCollapsed = childrenContainer.classList.toggle("collapsed");
-          if (isCollapsed) arrow.classList.remove("open");
-          else arrow.classList.add("open");
-        }
+/* ---------------------------------------------------------------------
+   Particle (confetti) shader
+--------------------------------------------------------------------- */
+const particleVS = `
+  attribute vec3 aSeed;
+  attribute vec3 aColor;
+  uniform mat4 uViewProj;
+  uniform float uTime;
+  varying vec3 vColor;
+  void main() {
+    float span = 7.5;
+    float y = mod(aSeed.y * span + uTime * (0.5 + aSeed.x * 0.6), span) - 1.0;
+    float x = (aSeed.x - 0.5) * 9.0 + sin(uTime * 0.6 + aSeed.z * 6.2831) * 0.4;
+    float z = (aSeed.z - 0.5) * 9.0 + cos(uTime * 0.5 + aSeed.y * 6.2831) * 0.4;
+    vColor = aColor;
+    gl_Position = uViewProj * vec4(x, y, z, 1.0);
+    gl_PointSize = 3.0 + 4.0 * fract(aSeed.x * 13.17);
+  }
+`;
+
+const particleFS = `
+  precision mediump float;
+  varying vec3 vColor;
+  void main() {
+    vec2 d = gl_PointCoord - vec2(0.5);
+    float r = length(d);
+    if (r > 0.5) discard;
+    float alpha = smoothstep(0.5, 0.0, r);
+    gl_FragColor = vec4(vColor, alpha * 0.85);
+  }
+`;
+
+const particleProg = createProgram(particleVS, particleFS);
+const particleLoc = {
+  aSeed: gl.getAttribLocation(particleProg, "aSeed"),
+  aColor: gl.getAttribLocation(particleProg, "aColor"),
+  uViewProj: gl.getUniformLocation(particleProg, "uViewProj"),
+  uTime: gl.getUniformLocation(particleProg, "uTime"),
+};
+
+const PARTICLE_COUNT = 160;
+const confettiColors = [
+  [1.0, 0.35, 0.65], [0.25, 0.85, 1.0], [1.0, 0.8, 0.2], [0.55, 0.4, 1.0], [0.3, 1.0, 0.55],
+];
+const seeds = new Float32Array(PARTICLE_COUNT * 3);
+const colors = new Float32Array(PARTICLE_COUNT * 3);
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  seeds[i*3] = Math.random();
+  seeds[i*3+1] = Math.random();
+  seeds[i*3+2] = Math.random();
+  const c = confettiColors[i % confettiColors.length];
+  colors[i*3] = c[0]; colors[i*3+1] = c[1]; colors[i*3+2] = c[2];
+}
+const seedBO = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, seedBO);
+gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+const colorBO = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, colorBO);
+gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+
+/* ---------------------------------------------------------------------
+   Colors
+--------------------------------------------------------------------- */
+const BODY = [0.16, 0.20, 0.26];
+const BODY_LIGHT = [0.24, 0.29, 0.36];
+const BELLY = [0.10, 0.34, 0.6];
+const LEG = [0.14, 0.17, 0.22];
+const TEETH = [0.95, 0.95, 0.92];
+const EYE = [1.0, 0.82, 0.15];
+const FLOOR_A = [0.04, 0.04, 0.06];
+const FLOOR_B = [0.07, 0.09, 0.14];
+
+/* ---------------------------------------------------------------------
+   Draw the ground (checkerboard, unaffected by dino transform)
+--------------------------------------------------------------------- */
+const GRID_N = 16;
+function drawFloor() {
+  for (let ix = -GRID_N/2; ix < GRID_N/2; ix++) {
+    for (let iz = -GRID_N/2; iz < GRID_N/2; iz++) {
+      posStack = [mat4Identity()];
+      rotStack = [mat3Identity()];
+      translate(ix + 0.5, -0.03, iz + 0.5);
+      const color = ((ix + iz) % 2 === 0) ? FLOOR_A : FLOOR_B;
+      drawBox(0.96, 0.06, 0.96, color, [0, 0, 0]);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Draw the T-Rex, fully procedural dance driven by time `t`
+--------------------------------------------------------------------- */
+function drawTRex(t) {
+  const beat = t * 2.1;
+  const twoPi = Math.PI * 2;
+
+  const bounce = Math.abs(Math.sin(beat * Math.PI)) * 0.22;
+  const squat = Math.abs(Math.sin(beat * Math.PI)) * 0.12;
+  const hipSway = Math.sin(beat * twoPi) * 0.16;
+  let hipTwist = Math.sin(beat * twoPi + Math.PI / 2) * 0.22;
+
+  // Flourish: a full spin every 8 seconds
+  const cycleLen = 8.0;
+  const spinWindow = 1.6;
+  const tInCycle = t % cycleLen;
+  if (tInCycle < spinWindow) {
+    const p = tInCycle / spinWindow;
+    const eased = p < 0.5 ? 2*p*p : -1 + (4 - 2*p) * p;
+    hipTwist += eased * twoPi;
+  }
+
+  const torsoTilt = 0.35 + Math.sin(beat * twoPi) * 0.08;
+  const neckYaw = Math.sin(beat * twoPi * 0.5) * 0.25;
+  const neckPitch = Math.sin(beat * twoPi + 0.4) * 0.12 - 0.1;
+  const headYaw = Math.sin(beat * twoPi * 0.5 + 0.3) * 0.3;
+  const headPitch = Math.sin(beat * twoPi + 0.8) * 0.15;
+  const jawOpen = Math.max(0, Math.sin(beat * twoPi * 2)) * 0.55;
+
+  posStack = [mat4Identity()];
+  rotStack = [mat3Identity()];
+
+  push();
+    translate(0, 1.55 + bounce - squat, 0);
+    rotateZ(hipSway);
+    rotateY(hipTwist);
+
+    // legs attach directly to the pelvis (root of this push)
+    [-1, 1].forEach((side) => {
+      const phase = side === 1 ? 0 : Math.PI;
+      const stepLift = Math.max(0, Math.sin(beat * twoPi + phase)) * 0.35;
+      const kneeBend = 0.25 + Math.max(0, Math.sin(beat * twoPi + phase)) * 0.5;
+      push();
+        translate(0.32 * side, -0.05, 0.0);
+        rotateX(-stepLift * 0.6);
+        rotateZ(side * 0.05);
+        drawBox(0.36, 0.62, 0.42, LEG, [0, -0.32, 0.02]);
+        push();
+          translate(0, -0.62, 0.08);
+          rotateX(kneeBend);
+          drawBox(0.28, 0.6, 0.32, LEG, [0, -0.31, 0.05]);
+          push();
+            translate(0, -0.62, 0.18);
+            rotateX(-kneeBend * 0.5 + 0.15);
+            drawBox(0.32, 0.16, 0.6, LEG, [0, -0.08, 0.14]);
+          pop();
+        pop();
+      pop();
+    });
+
+    push();
+      translate(0, 0.28, 0.05);
+      rotateX(torsoTilt);
+      drawBox(0.95, 1.15, 1.65, BODY, [0, 0.5, 0.05]);
+
+      // belly accent stripe
+      push();
+        translate(0, 0.15, 0.55);
+        drawBox(0.55, 0.6, 0.9, BELLY, [0, 0.35, 0.15]);
+      pop();
+
+      // neck + head
+      push();
+        translate(0, 0.95, 0.85);
+        rotateY(neckYaw);
+        rotateX(neckPitch);
+        drawBox(0.46, 0.46, 0.55, BODY_LIGHT, [0, 0.18, 0.28]);
+        push();
+          translate(0, 0.38, 0.5);
+          rotateY(headYaw);
+          rotateX(headPitch);
+          drawBox(0.58, 0.55, 0.95, BODY_LIGHT, [0, 0.24, 0.38]);
+
+          // eyes
+          [-1, 1].forEach((side) => {
+            push();
+              translate(0.24 * side, 0.16, 0.78);
+              drawBox(0.13, 0.13, 0.1, EYE, [0, 0, 0]);
+            pop();
+          });
+
+          // upper jaw teeth
+          for (let i = -1; i <= 1; i++) {
+            push();
+              translate(0.16 * i, -0.08, 0.86);
+              drawBox(0.07, 0.1, 0.05, TEETH, [0, -0.03, 0]);
+            pop();
+          }
+
+          // lower jaw
+          push();
+            translate(0, -0.02, 0.7);
+            rotateX(jawOpen);
+            drawBox(0.48, 0.15, 0.58, BODY_LIGHT, [0, -0.03, 0.2]);
+            for (let i = -1; i <= 1; i++) {
+              push();
+                translate(0.14 * i, 0.06, 0.48);
+                drawBox(0.06, 0.09, 0.05, TEETH, [0, 0.02, 0]);
+              pop();
+            }
+          pop();
+        pop();
+      pop();
+
+      // tiny arms
+      [-1, 1].forEach((side) => {
+        const armSwing = Math.sin(beat * twoPi + side * Math.PI) * 0.5;
+        const forearmCurl = Math.sin(beat * twoPi * 2) * 0.35 + 0.3;
+        push();
+          translate(0.46 * side, 0.72, 0.75);
+          rotateZ(side * (0.7 + armSwing));
+          rotateX(-0.5);
+          drawBox(0.16, 0.16, 0.4, BODY_LIGHT, [0.05 * side, 0, -0.18]);
+          push();
+            translate(0.05 * side, 0, -0.38);
+            rotateX(forearmCurl);
+            drawBox(0.13, 0.13, 0.3, BODY_LIGHT, [0.04 * side, 0, -0.13]);
+          pop();
+        pop();
       });
 
-      // Root open, submappen standaard dicht
-      if (path.length === 0) {
-        if (childrenContainer) {
-          childrenContainer.classList.remove("collapsed");
-          arrow.classList.add("open");
-        }
-      } else if (childrenContainer) {
-        childrenContainer.classList.add("collapsed");
-      }
+      // tail: 4 tapering segments, traveling wave
+      push();
+        translate(0, 0.35, -0.75);
+        rotateX(0.08);
+        rotateY(Math.sin(beat * twoPi) * 0.35);
+        drawBox(0.55, 0.5, 0.85, BODY, [0, 0, -0.38]);
+        push();
+          translate(0, 0, -0.8);
+          rotateY(Math.sin(beat * twoPi - 0.8) * 0.4);
+          drawBox(0.42, 0.4, 0.85, BODY, [0, 0, -0.38]);
+          push();
+            translate(0, 0, -0.75);
+            rotateY(Math.sin(beat * twoPi - 1.6) * 0.45);
+            drawBox(0.3, 0.28, 0.8, BODY, [0, 0, -0.36]);
+            push();
+              translate(0, 0, -0.7);
+              rotateY(Math.sin(beat * twoPi - 2.4) * 0.5);
+              drawBox(0.16, 0.16, 0.65, BODY, [0, 0, -0.3]);
+            pop();
+          pop();
+        pop();
+      pop();
 
-      container.appendChild(nodeWrapper);
-    }
+    pop(); // torso
+  pop(); // pelvis
+}
 
-    createTreeNode(brandStructure, treeRootEl, []);
-  </script>
+/* ---------------------------------------------------------------------
+   Camera controls (drag to orbit, auto-rotate otherwise)
+--------------------------------------------------------------------- */
+let azimuth = 0.6;
+let elevation = 0.38;
+let dragging = false;
+let lastX = 0, lastY = 0;
+
+canvas.addEventListener("pointerdown", (e) => {
+  dragging = true;
+  lastX = e.clientX; lastY = e.clientY;
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointerup", () => { dragging = false; });
+canvas.addEventListener("pointercancel", () => { dragging = false; });
+canvas.addEventListener("pointermove", (e) => {
+  if (!dragging) return;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  azimuth -= dx * 0.006;
+  elevation = Math.min(1.25, Math.max(0.05, elevation + dy * 0.005));
+  lastX = e.clientX; lastY = e.clientY;
+});
+
+/* ---------------------------------------------------------------------
+   Resize + render loop
+--------------------------------------------------------------------- */
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.floor(canvas.clientWidth * dpr);
+  canvas.height = Math.floor(canvas.clientHeight * dpr);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+window.addEventListener("resize", resize);
+
+gl.enable(gl.DEPTH_TEST);
+gl.clearColor(0.02, 0.02, 0.024, 1);
+
+const startTime = performance.now();
+
+function frame(nowMs) {
+  const t = (nowMs - startTime) / 1000;
+
+  if (canvas.width === 0) resize();
+  if (!dragging) azimuth += 0.06 * (1/60);
+
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  const aspect = canvas.width / canvas.height || 1;
+  const proj = mat4Perspective(50 * Math.PI / 180, aspect, 0.1, 100);
+  const radius = 7.5;
+  const eye = [
+    radius * Math.cos(elevation) * Math.sin(azimuth),
+    1.4 + radius * Math.sin(elevation),
+    radius * Math.cos(elevation) * Math.cos(azimuth),
+  ];
+  const target = [0, 1.5, 0];
+  const view = mat4LookAt(eye, target, [0, 1, 0]);
+  const viewProj = mat4Multiply(proj, view);
+
+  // ---- disco lights orbiting ----
+  const l1 = [Math.cos(t * 0.6) * 4.2, 2.6, Math.sin(t * 0.6) * 4.2];
+  const l2 = [Math.cos(t * 0.6 + 2.1) * 4.2, 3.1, Math.sin(t * 0.6 + 2.1) * 4.2];
+  const l3 = [Math.cos(t * 0.6 + 4.2) * 4.2, 1.6, Math.sin(t * 0.6 + 4.2) * 4.2];
+
+  gl.useProgram(solidProg);
+  gl.uniformMatrix4fv(solidLoc.uViewProj, false, viewProj);
+  gl.uniform3fv(solidLoc.uCameraPos, eye);
+  gl.uniform3fv(solidLoc.uSunDir, vNorm([0.3, 1.0, 0.5]));
+  gl.uniform3fv(solidLoc.uLightPos, new Float32Array([...l1, ...l2, ...l3]));
+  gl.uniform3fv(solidLoc.uLightColor, new Float32Array([
+    1.0, 0.25, 0.65,
+    0.2, 0.8, 1.0,
+    1.0, 0.75, 0.2,
+  ]));
+  bindCubeAttribs();
+
+  drawFloor();
+  drawTRex(t);
+
+  // ---- confetti particles ----
+  gl.useProgram(particleProg);
+  gl.uniformMatrix4fv(particleLoc.uViewProj, false, viewProj);
+  gl.uniform1f(particleLoc.uTime, t);
+  gl.bindBuffer(gl.ARRAY_BUFFER, seedBO);
+  gl.enableVertexAttribArray(particleLoc.aSeed);
+  gl.vertexAttribPointer(particleLoc.aSeed, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, colorBO);
+  gl.enableVertexAttribArray(particleLoc.aColor);
+  gl.vertexAttribPointer(particleLoc.aColor, 3, gl.FLOAT, false, 0, 0);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+  gl.depthMask(false);
+  gl.drawArrays(gl.POINTS, 0, PARTICLE_COUNT);
+  gl.depthMask(true);
+  gl.disable(gl.BLEND);
+
+  requestAnimationFrame(frame);
+}
+
+resize();
+requestAnimationFrame(frame);
+</script>
 </body>
 </html>
-
