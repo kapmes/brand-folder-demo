@@ -40,7 +40,76 @@
       padding: 0 16px;
     }
 
-    .app-header { margin-bottom: 22px; }
+    .app-header {
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .app-header-text { min-width: 0; flex: 1; }
+
+    @media (max-width: 720px) {
+      .app-header { flex-direction: column; align-items: flex-start; }
+      .hero-3d { align-self: center; }
+    }
+
+    /* 3D CUBE ANIMATION */
+    .hero-3d {
+      flex-shrink: 0;
+      width: 120px;
+      height: 120px;
+      perspective: 700px;
+    }
+
+    .cube {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: cube-spin 14s linear infinite;
+    }
+
+    .cube-face {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      box-shadow: inset 0 0 24px rgba(13, 68, 227, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cube-face::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(13, 68, 227, 0.5);
+      box-shadow: 0 0 14px rgba(13, 68, 227, 0.35);
+    }
+
+    .cube-face.front  { transform: translateZ(60px); }
+    .cube-face.back   { transform: rotateY(180deg) translateZ(60px); }
+    .cube-face.right  { transform: rotateY(90deg) translateZ(60px); }
+    .cube-face.left   { transform: rotateY(-90deg) translateZ(60px); }
+    .cube-face.top    { transform: rotateX(90deg) translateZ(60px); }
+    .cube-face.bottom { transform: rotateX(-90deg) translateZ(60px); }
+
+    @keyframes cube-spin {
+      from { transform: rotateX(0deg) rotateY(0deg); }
+      to   { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cube { animation: none; transform: rotateX(-18deg) rotateY(28deg); }
+    }
 
     .badge {
       display: inline-flex;
@@ -271,13 +340,25 @@
 <body>
   <div class="app">
     <header class="app-header">
-      <div class="badge">
-        <span class="badge-dot"></span>
-        KAPMES · BRAND FOLDER DEMO
+      <div class="app-header-text">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          KAPMES · BRAND FOLDER DEMO
+        </div>
+        <h1>REDEFINING THE SPACE OF FOLDERS</h1>
+        <p class="subtitle">Een interactieve demo van hoe jullie Google Drive brand folder is opgebouwd.</p>
+        <p class="hint">Klik links door de structuur. Rechts krijg je per map/bestand de bedoeling en inhoud.</p>
       </div>
-      <h1>REDEFINING THE SPACE OF FOLDERS</h1>
-      <p class="subtitle">Een interactieve demo van hoe jullie Google Drive brand folder is opgebouwd.</p>
-      <p class="hint">Klik links door de structuur. Rechts krijg je per map/bestand de bedoeling en inhoud.</p>
+      <div class="hero-3d" aria-hidden="true">
+        <div class="cube">
+          <div class="cube-face front">KAPMES</div>
+          <div class="cube-face back">BRAND</div>
+          <div class="cube-face right">FOLDER</div>
+          <div class="cube-face left">SYSTEM</div>
+          <div class="cube-face top">2026</div>
+          <div class="cube-face bottom">CORE</div>
+        </div>
+      </div>
     </header>
 
     <main class="layout">
